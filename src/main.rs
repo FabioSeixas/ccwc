@@ -36,9 +36,6 @@ fn main() {
         "-w" => count_words,
         "-m" => count_chars,
         other => {
-            if other.len() == 0 {
-
-            }
             panic!("{other} is not a valid command opt")
         }
     };
