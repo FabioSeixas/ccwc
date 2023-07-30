@@ -52,21 +52,25 @@ fn main() {
     }
 }
 
-fn count_bytes(x: &String) -> usize {
-    let buffer = read_target(&x);
-    buffer.len()
+fn get_parsed_buffer_and_size(x: &str) -> (String, usize) {
+    let buffer = read_target(&x.to_string());
+    let parsed = parse_to_uft8(&buffer);
+    (String::from(parsed), buffer.len())
 }
 
-fn count_input_lines(x: &String) -> usize {
-    let buffer = read_target(&x);
-    let parsed = parse_to_uft8(&buffer);
+fn count_bytes(x: &str) -> usize {
+    let (_, buffer_len) = get_parsed_buffer_and_size(x);
+    buffer_len
+}
+
+fn count_input_lines(x: &str) -> usize {
+    let (parsed, _) = get_parsed_buffer_and_size(&x);
     let lines_vec = split_lines(&parsed);
     lines_vec.len() - 1
 }
 
 fn count_words(x: &String) -> usize {
-    let buffer = read_target(&x);
-    let parsed = parse_to_uft8(&buffer);
+    let (parsed, _) = get_parsed_buffer_and_size(&x);
     split_and_count_words(&parsed)
 }
 
