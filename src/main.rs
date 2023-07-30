@@ -19,8 +19,10 @@ use std::str;
 
 fn main() {
     let my_collection: Vec<String> = args().collect();
-    if my_collection.len() < 2 {
-        return;
+    if my_collection.len() == 2 {
+        let result = empty_command_opt(&my_collection[1]);
+        println!("{} {} {}", result[0], result[1], result[2] );
+        return
     }
     let command = &my_collection[1];
     let target = &my_collection[2];
@@ -33,10 +35,19 @@ fn main() {
         "-c" => count_bytes,
         "-w" => count_words,
         "-m" => count_chars,
-        other => panic!("{other} command is not valid"),
+        other => {
+            if other.len() == 0 {
+
+            }
+            panic!("{other} is not a valid command opt")
+        }
     };
 
     println!("{}", count_fn(&target))
+}
+
+fn empty_command_opt(x: &str) -> [usize; 3] {
+    [count_bytes(x), count_input_lines(x), count_words(x)]
 }
 
 fn get_parsed_buffer_and_size(x: &str) -> (String, usize) {
