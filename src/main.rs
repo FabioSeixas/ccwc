@@ -50,6 +50,11 @@ fn main() {
         let words_count = count_words(&target);
         println!("words: {words_count}")
     }
+    
+    if command == "-m" {
+        let char_count = count_chars(&target);
+        println!("chars: {char_count}")
+    }
 }
 
 fn get_parsed_buffer_and_size(x: &str) -> (String, usize) {
@@ -74,6 +79,11 @@ fn count_words(x: &String) -> usize {
     split_and_count_words(&parsed)
 }
 
+fn count_chars(x: &String) -> usize {
+    let (parsed, _) = get_parsed_buffer_and_size(&x);
+    split_and_count_characters(&parsed)
+}
+
 fn read_target(target: &String) -> Vec<u8> {
     fs::read(target).expect("Error while reading the file")
 }
@@ -86,18 +96,38 @@ fn split_lines(x: &str) -> Vec<&str> {
     x.split("\n").collect()
 }
 
+fn split_and_count_characters(x: &str) -> usize {
+    let mut char_count = 0;
+    let lines = split_lines(&x);
+    for line in lines {
+        for _char in line.chars() {
+            char_count += 1;
+        }
+    }
+    char_count
+}
+
 fn split_and_count_words(x: &str) -> usize {
     let mut words_count = 0;
     let lines = split_lines(&x);
     for line in lines {
-        let line_len = line.len();
-        if line_len <= 1 {
+        let line_len = line.trim().len();
+        if line_len == 0 {
             continue;
         };
-        println!("{line}");
-        println!("{line_len}");
-        let c: Vec<&str> = line.trim().split(" ").collect();
-        words_count += c.len();
+        let parsed_line = line.replace(",", "");
+        let words: Vec<&str> = parsed_line.trim().split(" ").collect();
+        // println!("\nline: {parsed_line}");
+        // println!("words: {}", words.join(", "));
+        if words.len() > 0 {
+            for word in words {
+                if word.trim().len() < 1 {
+                    continue;
+                }
+                words_count += 1;
+            }
+        }
+        // println!("total count: {}", words_count);
     }
     words_count
 }
