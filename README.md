@@ -25,3 +25,4 @@ cat test.txt | ccwc -l
 - bytes count
 - etc...
 
+3. Use modules to organize code
