@@ -18,14 +18,6 @@ use std::str;
 // }
 
 fn main() {
-    // let argss = args();
-    // let maax = argss.max().expect("some error");
-    //
-    // println!("hey {maax}")
-    //
-    // for argument in args() {
-    //     println!("hey {argument}")
-    // }
     let my_collection: Vec<String> = args().collect();
     if my_collection.len() < 2 {
         return;
@@ -33,28 +25,18 @@ fn main() {
     let command = &my_collection[1];
     let target = &my_collection[2];
 
-    println!("command: {command}");
-    println!("target: {target}");
+    // println!("command {command}");
+    // println!("target {target}");
 
-    if command == "-l" {
-        let lines_count = count_input_lines(&target);
-        println!("number of lines: {lines_count}")
-    }
+    let count_fn = match command.as_str() {
+        "-l" => count_input_lines,
+        "-c" => count_bytes,
+        "-w" => count_words,
+        "-m" => count_chars,
+        other => panic!("{other} command is not valid"),
+    };
 
-    if command == "-c" {
-        let bytes_count = count_bytes(&target);
-        println!("bytes: {bytes_count}")
-    }
-
-    if command == "-w" {
-        let words_count = count_words(&target);
-        println!("words: {words_count}")
-    }
-    
-    if command == "-m" {
-        let char_count = count_chars(&target);
-        println!("chars: {char_count}")
-    }
+    println!("{}", count_fn(&target))
 }
 
 fn get_parsed_buffer_and_size(x: &str) -> (String, usize) {
@@ -74,12 +56,12 @@ fn count_input_lines(x: &str) -> usize {
     lines_vec.len() - 1
 }
 
-fn count_words(x: &String) -> usize {
+fn count_words(x: &str) -> usize {
     let (parsed, _) = get_parsed_buffer_and_size(&x);
     split_and_count_words(&parsed)
 }
 
-fn count_chars(x: &String) -> usize {
+fn count_chars(x: &str) -> usize {
     let (parsed, _) = get_parsed_buffer_and_size(&x);
     split_and_count_characters(&parsed)
 }
